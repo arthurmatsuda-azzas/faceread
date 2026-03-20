@@ -15,22 +15,23 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           contents: [{
             parts: [
-              { text: `Você é um sistema de análise facial. Observe a imagem com atenção e identifique TODOS os rostos humanos presentes.
+              { text: `Você é um sistema de análise facial e contagem de fluxo de pessoas. Observe a imagem com atenção e identifique TODOS os rostos humanos presentes.
 
-Para cada rosto encontrado, analise a expressão facial e as emoções demonstradas.
+Para cada rosto encontrado, analise a expressão facial e forneça uma descrição curta da pessoa para identificação (ex: "homem jovem, camisa azul", "mulher, cabelo longo castanho, vestido preto").
 
 Responda EXCLUSIVAMENTE com um objeto JSON válido (sem markdown, sem crases, sem texto extra) neste formato:
 {
   "faces_detected": <número inteiro de rostos encontrados>,
+  "people": [{"id": 1, "description": "descrição curta da pessoa para identificação"}],
   "emotions": ["emoção1 em português", "emoção2"],
   "dominant_emotion": "<emoção principal em português>",
   "confidence": "alta" ou "media" ou "baixa",
-  "description": "<descrição curta da expressão facial em português>",
+  "description": "<descrição curta da cena em português>",
   "engagement": "engajado" ou "neutro" ou "desengajado"
 }
 
 Se nenhum rosto for encontrado na imagem, responda com:
-{"faces_detected":0,"emotions":[],"dominant_emotion":"nenhum","confidence":"alta","description":"Nenhum rosto detectado na imagem","engagement":"neutro"}
+{"faces_detected":0,"people":[],"emotions":[],"dominant_emotion":"nenhum","confidence":"alta","description":"Nenhum rosto detectado na imagem","engagement":"neutro"}
 
 IMPORTANTE: Retorne APENAS o JSON, nada mais.` },
               { inline_data: { mime_type: 'image/jpeg', data: image } }
@@ -38,7 +39,7 @@ IMPORTANTE: Retorne APENAS o JSON, nada mais.` },
           }],
           generationConfig: {
             temperature: 0.1,
-            maxOutputTokens: 512
+            maxOutputTokens: 1024
           },
           safetySettings: [
             { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
