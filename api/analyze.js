@@ -15,23 +15,20 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           contents: [{
             parts: [
-              { text: `Você é um sistema de análise facial e contagem de fluxo de pessoas. Observe a imagem com atenção e identifique TODOS os rostos humanos presentes.
+              { text: `Você é um sistema de contagem de fluxo de pessoas. Observe a imagem com atenção e identifique TODAS as pessoas presentes, mesmo que parcialmente visíveis (vultos, silhuetas, partes do corpo). NÃO precisa ver o rosto - qualquer presença humana conta.
 
-Para cada rosto encontrado, analise a expressão facial e forneça uma descrição curta da pessoa para identificação (ex: "homem jovem, camisa azul", "mulher, cabelo longo castanho, vestido preto").
+Para cada pessoa encontrada, forneça uma descrição física única para re-identificação entre frames (ex: "homem alto, camisa azul, bermuda preta", "mulher baixa, vestido vermelho, bolsa marrom"). Foque em roupa, acessórios, corpo e posição na cena.
 
 Responda EXCLUSIVAMENTE com um objeto JSON válido (sem markdown, sem crases, sem texto extra) neste formato:
 {
-  "faces_detected": <número inteiro de rostos encontrados>,
-  "people": [{"id": 1, "description": "descrição curta da pessoa para identificação"}],
-  "emotions": ["emoção1 em português", "emoção2"],
-  "dominant_emotion": "<emoção principal em português>",
-  "confidence": "alta" ou "media" ou "baixa",
+  "people_detected": <número inteiro de pessoas/vultos encontrados>,
+  "people": [{"id": 1, "description": "descrição física detalhada para re-identificação", "position": "esquerda|centro|direita"}],
   "description": "<descrição curta da cena em português>",
-  "engagement": "engajado" ou "neutro" ou "desengajado"
+  "confidence": "alta" ou "media" ou "baixa"
 }
 
-Se nenhum rosto for encontrado na imagem, responda com:
-{"faces_detected":0,"people":[],"emotions":[],"dominant_emotion":"nenhum","confidence":"alta","description":"Nenhum rosto detectado na imagem","engagement":"neutro"}
+Se nenhuma pessoa for encontrada na imagem, responda com:
+{"people_detected":0,"people":[],"description":"Nenhuma pessoa detectada na imagem","confidence":"alta"}
 
 IMPORTANTE: Retorne APENAS o JSON, nada mais.` },
               { inline_data: { mime_type: 'image/jpeg', data: image } }
