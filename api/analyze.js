@@ -39,7 +39,8 @@ IMPORTANTE: Retorne APENAS o JSON, nada mais.` },
           }],
           generationConfig: {
             temperature: 0.1,
-            maxOutputTokens: 1024
+            maxOutputTokens: 1024,
+            thinkingConfig: { thinkingBudget: 0 }
           },
           safetySettings: [
             { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
@@ -90,7 +91,9 @@ IMPORTANTE: Retorne APENAS o JSON, nada mais.` },
       })});
     }
 
-    const text = candidate.content?.parts?.[0]?.text || '{}';
+    const parts = candidate.content?.parts || [];
+    const textPart = parts.filter(p => p.text && !p.thought).pop() || parts.find(p => p.text);
+    const text = textPart?.text || '{}';
     res.status(200).json({ text });
   } catch (e) {
     res.status(500).json({ error: e.message });
